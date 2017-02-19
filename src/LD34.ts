@@ -1,7 +1,7 @@
 // LD34 - Growing / 2-button Controls
 // (c) 2015 by Arthur Langereis — @zenmumbler
 
-/// <reference path="../../stardazed-tx/dist/stardazed-tx.d.ts" />
+/// <reference path="../../stardazed/dist/stardazed.d.ts" />
 
 import io = sd.io;
 import math = sd.math;

@@ -1,0 +1,18 @@
+TODO
+----
+
+other incidental objects around track
+	start flag
+	finish flag
+
+
+track behind ball
+snow particles around ball
+
+trees next to track
+
+
+obstacles
+
+
+~~missing wall bounces

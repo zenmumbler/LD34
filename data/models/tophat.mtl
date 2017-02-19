@@ -1,0 +1,5 @@
+# Blender MTL File: 'carrot.blend'
+# Material Count: 1
+
+newmtl lambert2SG
+map_Kd ../tex2D/Texture_TopHat.jpg

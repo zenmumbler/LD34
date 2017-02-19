@@ -1,0 +1,10 @@
+# Blender MTL File: 'carrot.blend'
+# Material Count: 2
+
+newmtl Carrot
+# Kd 0.677600 0.226519 0.012167
+Kd 0.424758 0.038127 0.000061
+
+newmtl Carrot_Top
+# Kd 0.003193 0.246466 0.000281
+Kd 0.000003 0.045906 0.000000

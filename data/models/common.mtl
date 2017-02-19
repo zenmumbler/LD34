@@ -1,0 +1,11 @@
+newmtl snow
+map_Kd ../tex2D/Snow0030_1_S.jpg
+
+newmtl cliff
+map_Kd ../tex2D/Cliffs0169_1_S.jpg
+
+newmtl pebble
+# Kd 0.141176 0.141176 0.180392
+Kd 0.013473 0.013473 0.023104
+Ks 1 1 1
+Ns 30

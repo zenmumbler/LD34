@@ -1,0 +1,4 @@
+build/*.map
+build/*.js
+itch-io/*.zip
+.DS_Store

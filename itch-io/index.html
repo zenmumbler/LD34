@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=960">
+	<title>Snowman Builder Extreme (LD34) by Arthur Langereis</title>
+	<style>
+		body {
+			margin: 0; background: black;
+			cursor: default;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+
+			font-family: Tahoma, sans-serif;
+		}
+		.stageholder {
+			width: 960px;
+			height: 540px;
+			margin: 0 auto;
+			position: relative;
+			overflow: hidden;
+		}
+		#stage {
+			position: absolute;
+			z-index: 3;
+		}
+		.overlay {
+			position: absolute;
+			z-index: 4;
+			width: 100%;
+			height: 100%;
+			display: none;
+			text-align: center;
+		}
+
+		button {
+			height: 85px;
+			border: 4px solid orange;
+			border-radius: 20px;
+
+			background-color: white;
+			background-color: rgba(255,255,255,.7);
+
+			color: #444;
+			font-size: 60px;
+			font-family: Tahoma, sans-serif;
+			outline: none;
+		}
+
+		/* --------------- */
+
+		.title {
+			position: absolute;
+			top: 3%;
+			left: 0;
+			width: 100%;
+			height: 114px;
+			background: transparent url(http://zenmumbler.net/ld34/data/img/smb.png) no-repeat center top;
+		}
+		.subtitle {
+			position: absolute;
+			top: 18%;
+			left: 0;
+			width: 100%;
+			height: 124px;
+			background: transparent url(http://zenmumbler.net/ld34/data/img/extreme.png) no-repeat center top;
+		}
+
+		.explanation {
+			position: absolute;
+			top: 39%;
+			left: 26%;
+			width: 150px;
+			height: 190px;
+			line-height: 190px;
+			font-size: 20px;
+			font-weight: 600;
+			text-shadow: 0 0 5px white;
+
+			background: transparent url(http://zenmumbler.net/ld34/data/img/controls.png) no-repeat left center;
+			background-size: contain;
+		}
+
+		.explanation-2 {
+			position: absolute;
+			top: 39%;
+			right: 26%;
+			width: 250px;
+			height: 190px;
+			line-height: 2em;
+			font-size: 22px;
+			font-weight: 600;
+			text-shadow: 0 0 5px white;
+		}
+
+		.start-holder {
+			position: absolute;
+			bottom: 2%;
+			left: 0;
+			right: 0;
+			height: 100px;
+		}
+
+		#start {
+			width: 40%;
+		}
+
+		/* --------------- */
+
+		.stat {
+			position: absolute;
+			top: 30px;
+			width: 150px;
+			text-align: center;
+			font-weight: 600;
+			color: white;
+			text-shadow: -1px -1px 0 #333, 1px -1px 0 #333, -1px 1px 0 #333, 1px 1px 0 #333;
+		}
+		.stat.stat-big {
+			top: 120px;
+		}
+		.stat span {
+			display: block;
+		}
+		.stat.stat-big span {
+			color: orange;
+		}
+
+		.stat-left {
+			left: 50px;
+		}
+		.stat-center {
+			left: calc(50% - 75px);
+		}
+		.stat-right {
+			right: 50px;
+		}
+
+		.stat-title { font-size: 20px; }
+		.stat-counter {	font-size: 40px; }
+		.stat-big .stat-title { font-size: 20px; }
+		.stat-big .stat-counter { font-size: 40px; }
+
+		.rank {
+			position: absolute;
+			top: 44%;
+			left: 0; right: 0;
+			text-align: center;
+			font-weight: 600;
+			color: white;
+			font-size: 80px;
+			text-shadow: -1px -1px 0 #333, 1px -1px 0 #333, -1px 1px 0 #333, 1px 1px 0 #333;
+		}
+
+		#title, #again {
+			width: 30%;
+		}
+
+		/* ---------------- */
+
+		.counter {
+			display: none;
+
+			position: absolute;
+			left: 0;
+			right: 0;
+			top: 20%;
+			bottom: 15%;
+			line-height: 340px;
+			z-index: 10;
+			font-size: 150px;
+			text-shadow: -2px -2px 0 #333, 2px -2px 0 #333, -2px 2px 0 #333, 2px 2px 0 #333;
+
+			-webkit-transform-origin: center center;
+			transform-origin: center center;
+			transform: scale(1, 1);
+			opacity: 1;
+
+			transition: transform 1s ease-out, opacity 1s ease-in;
+		}
+
+		.counter.count-3 { color: green; }
+		.counter.count-2 { color: yellow; }
+		.counter.count-1 { color: orange; }
+		.counter.count-go { color: red; }
+
+		.counter.fade {
+			transform: scale(2.5, 2.5);
+			opacity: 0;
+		}
+
+	</style>
+</head>
+<body>
+<div class="stageholder">
+	<canvas width="960" height="540" id="stage"></canvas>
+
+	<div class="overlay" id="menuOverlay">
+		<div class="title"></div>
+		<div class="subtitle"></div>
+
+		<div class="explanation">
+		MOVEMENT
+		</div>
+		<div class="explanation-2">
+		Roll, grow bigger and collect as many
+		attributes as possible. Have fun!
+		</div>
+
+		<div class="start-holder">
+			<button id="start">START</button>
+		</div>
+	</div>
+
+	<div class="overlay" id="trackOverlay">
+		<div class="stat stat-left">
+			<span class="stat-title">Items</span>
+			<span class="stat-counter" id="stat-items">0</span>
+		</div>
+		<div class="stat stat-center">
+			<span class="stat-title">Size</span>
+			<span class="stat-counter" id="stat-size">0cm</span>
+		</div>
+		<div class="stat stat-right">
+			<span class="stat-title">Time</span>
+			<span class="stat-counter" id="stat-time">60</span>
+		</div>
+
+		<div class="counter count-3">3</div>
+		<div class="counter count-2">2</div>
+		<div class="counter count-1">1</div>
+		<div class="counter count-go">Go!</div>
+	</div>
+
+	<div class="overlay" id="resultOverlay">
+		<div class="stat stat-big stat-left">
+			<span class="stat-title">Pebbles</span>
+			<span class="stat-counter" id="stat-pebbles">0</span>
+		</div>
+		<div class="stat stat-big stat-center">
+			<span class="stat-title">Carrots</span>
+			<span class="stat-counter" id="stat-carrots">0</span>
+		</div>
+		<div class="stat stat-big stat-right">
+			<span class="stat-title">Hats</span>
+			<span class="stat-counter" id="stat-hats">0</span>
+		</div>
+
+		<div class="rank">“<span id="rank-name"></span>”</div>
+
+		<div class="start-holder">
+			<button id="title">TITLE</button>
+			&nbsp;&nbsp;
+			<button id="again">AGAIN</button>
+		</div>
+	</div>
+</div>
+
+<script>
+window.assetBaseURL = "";
+</script>
+<script src="http://zenmumbler.net/stardazed-tx/ext/gl-matrix-min.js"></script>
+<script src="http://zenmumbler.net/stardazed-tx/build/stardazed-tx.js"></script>
+<script src="http://zenmumbler.net/ld34/build/TrackGen.js"></script>
+<script src="http://zenmumbler.net/ld34/build/TrackScene.js"></script>
+<script src="http://zenmumbler.net/ld34/build/MenuScene.js"></script>
+<script src="http://zenmumbler.net/ld34/build/LD34.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "name": "LD34",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Snowman Builder Extreme",
+  "main": "index.js",
+  "scripts": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:zenmumbler/LD34.git"
+  },
+  "author": "Arthur Langereis",
+  "license": "MIT",
+  "homepage": "https://zenmumbler.net/LD34/"
+}

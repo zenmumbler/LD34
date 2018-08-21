@@ -85,4 +85,6 @@ export function loadAssets() {
 			assets.skyTexture = texture;
 		})
 	];
+
+	return Promise.all(resources);
 }

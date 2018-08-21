@@ -1,6 +1,7 @@
 // LD34 - Growing / 2-button Controls
 // (c) 2015 by Arthur Langereis — @zenmumbler
 
+import { loadAssets } from "./assets";
 
 
 function init() {
@@ -9,15 +10,14 @@ function init() {
 	const rctx = render.makeRenderContext(canvas)!;
 	const actx = audio.makeAudioContext()!;
 
-
 	// -- begin
-	Promise.all<{}>(resources).then(() => {
-		assets.trackCtl = new TrackScene(rctx, actx);
-		assets.menuCtl = new MenuScene(rctx, actx);
-		sd.defaultRunLoop.sceneController = assets.menuCtl;
+	loadAssets().then(() => {
+		const trackCtl = new TrackScene(rctx, actx);
+		// assets.menuCtl = new MenuScene(rctx, actx);
+		sd.defaultRunLoop.sceneController = trackCtl;
 		sd.defaultRunLoop.start();
 	});
 
 }
 
-dom.on(window, "load", init);
+window.onload = init;

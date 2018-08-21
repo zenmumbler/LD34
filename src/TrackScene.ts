@@ -1,7 +1,7 @@
 // TrackScene - part of LD34 game
 // (c) 2015 by Arthur Langereis — @zenmumbler
 
-
+import { defineTrack } from "./TrackGen";
 
 const enum AttachmentType {
 	Carrot,
@@ -537,7 +537,7 @@ const enum CameraMode {
 }
 
 
-class TrackScene implements sd.SceneController {
+export class TrackScene {
 	private scene_: world.Scene;
 
 	private player_: Player;

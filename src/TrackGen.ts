@@ -5,7 +5,7 @@ const TrackWidth = 16;
 const TrackTorchOffset = 32;
 const TrackWallHeight = 5;
 
-interface TrackSection {
+export interface TrackSection {
 	incline: number;     // angle of rotation over X in deg
 	direction: number;   // angle of rotation over Y in deg
 	tilt: number;        // angle of rotation over Z in deg
@@ -14,7 +14,7 @@ interface TrackSection {
 }
 
 
-type TrackSpec = TrackSection[];
+export type TrackSpec = TrackSection[];
 
 
 interface TrackGenState {
@@ -332,7 +332,7 @@ function genTrackSectionData(section: TrackSection, genState: TrackGenState): Tr
 
 // ------
 
-function defineTrack(): TrackSpec {
+export function defineTrack(): TrackSpec {
 	var track: TrackSpec = [];
 
 	// -- initial straight

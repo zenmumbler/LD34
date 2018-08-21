@@ -1,3 +1,5 @@
+/*
+
 // MenuScene - part of LD34 game
 // (c) 2015 by Arthur Langereis — @zenmumbler
 
@@ -108,3 +110,4 @@ class MenuScene implements sd.SceneController {
 		dom.hide("#menuOverlay");
 	}
 }
+*/

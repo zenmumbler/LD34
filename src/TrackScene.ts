@@ -1,7 +1,14 @@
 // TrackScene - part of LD34 game
 // (c) 2015 by Arthur Langereis — @zenmumbler
 
-import { defineTrack } from "./TrackGen";
+import { Float3, Float4x4 } from "@stardazed/array";
+import { vec2, vec3, quat, mat4 } from "@stardazed/vector";
+import { deg2rad } from "@stardazed/math";
+import * as dom from "@zenmumbler/mini-dom";
+
+import { defineTrack, TrackWidth, TrackSectionData, TrackSectionSegment, TrackSpec, TrackGenState, genTrackSectionData } from "./TrackGen";
+import { SFX, SFXType } from "./sound";
+import { assets } from "./assets";
 
 const enum AttachmentType {
 	Carrot,
@@ -14,7 +21,7 @@ interface AttachmentSpec {
 	type: AttachmentType;
 	mesh: world.MeshInstance;
 	material: asset.Material;
-	size: sd.Float3; // vec3
+	size: Float3; // vec3
 }
 
 
@@ -22,8 +29,8 @@ interface AttachmentInstance {
 	ent: world.Entity;
 	tx: world.TransformInstance;
 	model: world.StdModelInstance;
-	staticPos: sd.Float3;
-	bounds: math.AABB;
+	staticPos: Float3;
+	bounds: AABB;
 	spec: AttachmentSpec;
 	attached: boolean;
 }
@@ -95,7 +102,7 @@ class Attachments {
 				model: model,
 				spec: spec,
 				staticPos: [0, 0, 0],
-				bounds: new math.AABB(),
+				bounds: new AABB(),
 				attached: false
 			});
 		}
@@ -129,7 +136,7 @@ class Attachments {
 				this.detach(instance);
 				sectionAttList.push(instance);
 				vec3.copy(instance.staticPos, staticPos);
-				instance.bounds = math.AABB.fromCenterAndSize(staticPos, instance.spec.size);
+				instance.bounds = AABB.fromCenterAndSize(staticPos, instance.spec.size);
 
 				++attachmentIndex;
 				--attachmentsLeft;
@@ -249,7 +256,7 @@ class Player {
 
 
 	bounds() {
-		return math.AABB.fromCenterAndSize(this.position, [this.radius_, this.radius_, this.radius_]);
+		return AABB.fromCenterAndSize(this.position, [this.radius_, this.radius_, this.radius_]);
 	}
 
 	get position() {
@@ -260,11 +267,11 @@ class Player {
 		return this.scene.rigidBodyMgr.velocity(this.body_);
 	}
 
-	move(delta: sd.Float3) {
+	move(delta: Float3) {
 		this.scene.transformMgr.translate(this.transform_, delta);
 	}
 
-	moveTo(pos: sd.Float3) {
+	moveTo(pos: Float3) {
 		this.scene.transformMgr.setPosition(this.transform_, pos);
 	}
 
@@ -319,7 +326,7 @@ class Camera implements world.ProjectionSetup {
 		var h = rc.gl.drawingBufferHeight;
 		this.aspectRatio = w / h;
 
-		mat4.perspective(this.projectionMatrix, math.deg2rad(60), this.aspectRatio, 0.1, 150.0);
+		mat4.perspective(this.projectionMatrix, deg2rad(60), this.aspectRatio, 0.1, 150.0);
 
 		this.setPlayerTrackLocation(0, 0);
 		this.pos[1] = this.track_.sections[this.playerSectionIx_].segments[this.playerSegmentIx].center[1] + 1.5;
@@ -357,7 +364,7 @@ class Camera implements world.ProjectionSetup {
 
 
 interface Torch {
-	pos: sd.Float3;
+	pos: Float3;
 	transform: world.TransformInstance;
 	light: world.LightInstance;
 }
@@ -370,10 +377,10 @@ interface TrackLocationInfo {
 	section: TrackSectionData;
 	segment: TrackSectionSegment;
 
-	segLineFront: sd.Float3;
-	segLineRear: sd.Float3;
+	segLineFront: Float3;
+	segLineRear: Float3;
 
-	segLine: sd.Float3;
+	segLine: Float3;
 
 	segHorizPos: number;
 	segRelHorizPos: number;
@@ -454,7 +461,7 @@ class Track {
 	}
 
 
-	findObject(bounds: math.AABB, pos: sd.Float3): TrackLocationInfo | null {
+	findObject(bounds: AABB, pos: Float3): TrackLocationInfo | null {
 		for (let sectionIx = 0; sectionIx < this.sections_.length; ++sectionIx) {
 			var section = this.sections_[sectionIx];
 
@@ -507,7 +514,7 @@ class Track {
 	}
 
 
-	findClosestTorches(pos: sd.Float3, limit: number) {
+	findClosestTorches(pos: Float3, limit: number) {
 		// torches are sorted linearly along the track, so find the closest and return that + limit-1 next
 		var nearestTorch = -1;
 		var torchDistSq = 999999;
@@ -520,7 +527,7 @@ class Track {
 			}
 		}
 
-		var torchesAvail = math.clamp(nearestTorch > -1 ? (this.torches_.length - nearestTorch) : 0, 0, limit);
+		var torchesAvail = clamp(nearestTorch > -1 ? (this.torches_.length - nearestTorch) : 0, 0, limit);
 		var result: Torch[] = [];
 		while (torchesAvail--) {
 			result.push(this.torches_[nearestTorch++]);
@@ -608,9 +615,9 @@ export class TrackScene {
 			this.deviceTilt = evt.beta * Math.sign(evt.gamma!);
 		});
 
-		dom.on("#title", "click", (_evt) => {
-			sd.defaultRunLoop.sceneController = assets.menuCtl!;
-		});
+		// dom.on("#title", "click", (_evt) => {
+		// 	defaultRunLoop.sceneController = assets.menuCtl!;
+		// });
 		dom.on("#again", "click", (_evt) => {
 			this.reset();
 		});
@@ -645,7 +652,7 @@ export class TrackScene {
 
 	private debugCanvas?: HTMLCanvasElement;
 
-	fark(outBounds: math.Rect, center: sd.Float3, range: number, projectionViewportMatrix: sd.Float4x4) {
+	fark(outBounds: Rect, center: Float3, range: number, projectionViewportMatrix: Float4x4) {
 		// if the camera is inside the range of the point light, just apply it to the full screen
 		if (vec3.length(center) <= range * 1.3) { // apply some fudge factors because I'm tired
 			outBounds.left = 0;
@@ -670,8 +677,8 @@ export class TrackScene {
 			[cx + range, cy + range, cz + range, 1.0]
 		];
 
-		const min = [sd.Float.max, sd.Float.max];
-		const max = [-sd.Float.max, -sd.Float.max];
+		const min = [Float.max, Float.max];
+		const max = [-Float.max, -Float.max];
 		const sp = [0, 0, 0, 0];
 
 		for (let vix = 0; vix < 8; ++vix) {
@@ -687,7 +694,7 @@ export class TrackScene {
 		outBounds.bottom = min[1];
 	}
 
-	drawLightSSBs(projection: world.ProjectionSetup, camDir: sd.Float3) {
+	drawLightSSBs(projection: world.ProjectionSetup, camDir: Float3) {
 		// debugger;
 		if (! this.debugCanvas) {
 			const c = document.createElement("canvas");
@@ -702,9 +709,9 @@ export class TrackScene {
 		ctx2D.strokeStyle = "#ff0000";
 		ctx2D.clearRect(0, 0, ctx2D.canvas.width, ctx2D.canvas.height);
 
-		const viewport = math.viewportMatrix(0, 0, this.rc.gl.drawingBufferWidth, this.rc.gl.drawingBufferHeight, 0, 1);
-		const ssb: math.Rect = { left: 0, top: 0, right: 0, bottom: 0 };
-		const ssb2: math.Rect = { left: 0, top: 0, right: 0, bottom: 0 };
+		const viewport = viewportMatrix(0, 0, this.rc.gl.drawingBufferWidth, this.rc.gl.drawingBufferHeight, 0, 1);
+		const ssb: Rect = { left: 0, top: 0, right: 0, bottom: 0 };
+		const ssb2: Rect = { left: 0, top: 0, right: 0, bottom: 0 };
 
 		const lm = this.scene_.lightMgr;
 		const txm = this.scene_.transformMgr;
@@ -723,18 +730,18 @@ export class TrackScene {
 				const lcpos = lm.positionCameraSpace(lix);
 				const halfRange = lm.range(lix);
 
-				math.screenSpaceBoundsForWorldCube(ssb, lpos, halfRange, camDir, projection.viewMatrix, PVM, viewport);
+				screenSpaceBoundsForWorldCube(ssb, lpos, halfRange, camDir, projection.viewMatrix, PVM, viewport);
 				this.fark(ssb2, lcpos, halfRange, VPP);
 
-				ssb.left = math.clamp(ssb.left, 0, 9999);
-				ssb.right = math.clamp(ssb.right, -9999, 1136);
-				ssb.top = math.clamp(640 - ssb.top, 0, 9999);
-				ssb.bottom = math.clamp(640 - ssb.bottom, -9999, 640);
+				ssb.left = clamp(ssb.left, 0, 9999);
+				ssb.right = clamp(ssb.right, -9999, 1136);
+				ssb.top = clamp(640 - ssb.top, 0, 9999);
+				ssb.bottom = clamp(640 - ssb.bottom, -9999, 640);
 
-				ssb2.left = math.clamp(ssb2.left, 0, 9999);
-				ssb2.right = math.clamp(ssb2.right, -9999, 1136);
-				ssb2.top = math.clamp(640 - ssb2.top, 0, 9999);
-				ssb2.bottom = math.clamp(640 - ssb2.bottom, -9999, 640);
+				ssb2.left = clamp(ssb2.left, 0, 9999);
+				ssb2.right = clamp(ssb2.right, -9999, 1136);
+				ssb2.top = clamp(640 - ssb2.top, 0, 9999);
+				ssb2.bottom = clamp(640 - ssb2.bottom, -9999, 640);
 
 				ctx2D.strokeStyle = "#ff0000";
 				// ctx2D.strokeRect(ssb.left, ssb.top, ssb.right - ssb.left, ssb.bottom - ssb.top);
@@ -761,7 +768,7 @@ export class TrackScene {
 
 		if (this.cameraMode_ == CameraMode.Bird) {
 			projection = {
-				projectionMatrix: mat4.perspective([], math.deg2rad(60), this.camera_.aspectRatio, 0.1, 300.0),
+				projectionMatrix: mat4.perspective([], deg2rad(60), this.camera_.aspectRatio, 0.1, 300.0),
 				viewMatrix: mat4.lookAt([], [50, 65, 175], this.player_.position, [-1, 0, 0]) // 100, 55, 110
 			};
 			vec3.normalize(camDir, vec3.sub([], this.player_.position, [50, 65, 175]));
@@ -1051,7 +1058,7 @@ export class TrackScene {
 					userSideForce = playerMass * -700;
 				}
 				else if (this.deviceTilt != 0) {
-					userSideForce = playerMass * math.clamp(this.deviceTilt, -15, 15) * 40;
+					userSideForce = playerMass * clamp(this.deviceTilt, -15, 15) * 40;
 				}
 				scene.rigidBodyMgr.addForce(this.player_.body, vec3.scale([], curSegment.left, userSideForce * timeStep));
 

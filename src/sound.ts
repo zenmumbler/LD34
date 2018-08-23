@@ -1,3 +1,5 @@
+import { assets } from "./assets";
+
 export const enum SFXType {
 	Count1,
 	Count2,
@@ -81,7 +83,7 @@ export class SFX {
 			return;
 		}
 
-		var relSpeed = math.clamp01((speed | 0) / 12);
+		var relSpeed = clamp01((speed | 0) / 12);
 		var maxVol = .35 * relSpeed * relSpeed;
 		this.snowGain.gain.value = floor ? maxVol : 0.05;
 	}

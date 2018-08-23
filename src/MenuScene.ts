@@ -3,7 +3,7 @@
 // MenuScene - part of LD34 game
 // (c) 2015 by Arthur Langereis — @zenmumbler
 
-class MenuScene implements sd.SceneController {
+class MenuScene implements SceneController {
 	private scene_: world.Scene;
 	private skybox_: world.Skybox;
 	private camTarget = new Float32Array(3);
@@ -56,7 +56,7 @@ class MenuScene implements sd.SceneController {
 		rpdMain.clearMask = render.ClearMask.ColourDepth;
 
 		var camera: world.ProjectionSetup = {
-			projectionMatrix: mat4.perspective([], math.deg2rad(60), this.rc.gl.drawingBufferWidth / this.rc.gl.drawingBufferHeight, 1, 100),
+			projectionMatrix: mat4.perspective([], deg2rad(60), this.rc.gl.drawingBufferWidth / this.rc.gl.drawingBufferHeight, 1, 100),
 			viewMatrix: mat4.lookAt([], [0, 0, 0], this.camTarget, [0, 1, 0])
 		};
 
@@ -78,7 +78,7 @@ class MenuScene implements sd.SceneController {
 			var now = performance.now();
 			if (now > this.nextModeTime) {
 				this.mode = "wait";
-				sd.defaultRunLoop.sceneController = assets.trackCtl!;
+				defaultRunLoop.sceneController = assets.trackCtl!;
 			}
 
 			var sinceClick = now - this.modeStartTime;

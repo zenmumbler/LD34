@@ -10,15 +10,15 @@ export interface Assets {
 
 	// skyTexture?: render.Texture;
 
-	// snowLoop?: AudioBuffer;
-	// music?: AudioBuffer;
-	// count1Sample?: AudioBuffer;
-	// count2Sample?: AudioBuffer;
-	// pickupSample?: AudioBuffer;
-	// wallHitSample?: AudioBuffer;
-	// orchHitSample?: AudioBuffer;
-	// fanfareSample?: AudioBuffer;
-	// slamSample?: AudioBuffer;
+	snowLoop?: AudioBuffer;
+	music?: AudioBuffer;
+	count1Sample?: AudioBuffer;
+	count2Sample?: AudioBuffer;
+	pickupSample?: AudioBuffer;
+	wallHitSample?: AudioBuffer;
+	orchHitSample?: AudioBuffer;
+	fanfareSample?: AudioBuffer;
+	slamSample?: AudioBuffer;
 }
 
 export const assets: Assets = {};

@@ -2,6 +2,7 @@
 // (c) 2015 by Arthur Langereis — @zenmumbler
 
 import { loadAssets } from "./assets";
+import { TrackScene } from "./TrackScene";
 
 
 function init() {
@@ -14,8 +15,8 @@ function init() {
 	loadAssets().then(() => {
 		const trackCtl = new TrackScene(rctx, actx);
 		// assets.menuCtl = new MenuScene(rctx, actx);
-		sd.defaultRunLoop.sceneController = trackCtl;
-		sd.defaultRunLoop.start();
+		defaultRunLoop.sceneController = trackCtl;
+		defaultRunLoop.start();
 	});
 
 }

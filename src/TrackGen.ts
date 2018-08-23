@@ -1,9 +1,13 @@
 // TrackGen - part of LD34 game
 // (c) 2015 by Arthur Langereis — @zenmumbler
 
-const TrackWidth = 16;
-const TrackTorchOffset = 32;
-const TrackWallHeight = 5;
+import { Float3, Float4 } from "@stardazed/array";
+import { deg2rad } from "@stardazed/math";
+import { vec2, vec3, quat } from "@stardazed/vector";
+
+export const TrackWidth = 16;
+export const TrackTorchOffset = 32;
+export const TrackWallHeight = 5;
 
 export interface TrackSection {
 	incline: number;     // angle of rotation over X in deg
@@ -17,9 +21,9 @@ export interface TrackSection {
 export type TrackSpec = TrackSection[];
 
 
-interface TrackGenState {
-	origin: sd.Float3;      // vec3
-	orientation: sd.Float4; // quat
+export interface TrackGenState {
+	origin: Float3;      // vec3
+	orientation: Float4; // quat
 	resolution: number;         // m
 	uvCoordV: number;           // track V coordinate of texture map over steps
 	nextTorch: number;			// m until next torch placement
@@ -37,30 +41,30 @@ const enum Incline {
 }
 
 
-interface TrackSectionSegment {
-	center: sd.Float3;
-	left: sd.Float3;
-	leftRear: sd.Float3;
-	rightRear: sd.Float3;
-	leftFront: sd.Float3;
-	rightFront: sd.Float3;
+export interface TrackSectionSegment {
+	center: Float3;
+	left: Float3;
+	leftRear: Float3;
+	rightRear: Float3;
+	leftFront: Float3;
+	rightFront: Float3;
 	halfWidth: number;
 
-	direction: sd.Float3;
-	normal: sd.Float3;
+	direction: Float3;
+	normal: Float3;
 }
 
 
-interface TorchLoc {
-	lightPos: sd.Float3;
-	leftWallPos: sd.Float3;
-	rightWallPos: sd.Float3;
+export interface TorchLoc {
+	lightPos: Float3;
+	leftWallPos: Float3;
+	rightWallPos: Float3;
 }
 
 
-interface TrackSectionData {
-	position: sd.Float3;
-	bounds: math.AABB;
+export interface TrackSectionData {
+	position: Float3;
+	bounds: AABB;
 	floorMeshData: meshdata.MeshData;
 	wallMeshData: meshdata.MeshData;
 	segments: TrackSectionSegment[];
@@ -71,12 +75,12 @@ interface TrackSectionData {
 }
 
 
-function genTrackSectionData(section: TrackSection, genState: TrackGenState): TrackSectionData {
+export function genTrackSectionData(section: TrackSection, genState: TrackGenState): TrackSectionData {
 	var steps = (section.length / genState.resolution) | 0; // length must be a multiple of resolution
 	var halfSectionWidth = (TrackWidth / 2) | 0; // width must be a multiple of 2
 
 	// each section defines its final orientation in absolute rotation over X, Y and Z in degrees
-	var targetOrientation = quat.fromEuler(math.deg2rad(section.tilt), math.deg2rad(section.direction), math.deg2rad(section.incline));
+	var targetOrientation = quat.fromEuler(deg2rad(section.tilt), deg2rad(section.direction), deg2rad(section.incline));
 
 
 	// make floor mesh and get attribute views
@@ -103,7 +107,7 @@ function genTrackSectionData(section: TrackSection, genState: TrackGenState): Tr
 
 	var result: TrackSectionData = {
 		position: vec3.clone(genState.origin),
-		bounds: new math.AABB(),
+		bounds: new AABB(),
 		floorMeshData: md,
 		wallMeshData: wallMD,
 		segments: [],
@@ -116,7 +120,7 @@ function genTrackSectionData(section: TrackSection, genState: TrackGenState): Tr
 	var forwardVec = [0, 0, 1];
 	var upVec = [0, 1, 0];
 
-	var calcSpace = (orientation: sd.Float4) => {
+	var calcSpace = (orientation: Float4) => {
 		var direction = vec3.normalize([], vec3.transformQuat([], forwardVec, orientation));
 		var normal = vec3.normalize([], vec3.transformQuat([], upVec, orientation));
 		var left = vec3.normalize([], vec3.cross([], normal, direction));

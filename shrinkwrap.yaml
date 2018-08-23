@@ -1,9 +1,19 @@
 dependencies:
+  '@stardazed/aabb': 0.4.0
   '@stardazed/array': 0.4.0
   '@stardazed/math': 0.4.0
   '@stardazed/vector': 0.4.0
   '@zenmumbler/mini-dom': 1.0.0
 packages:
+  /@stardazed/aabb/0.4.0:
+    dependencies:
+      '@stardazed/array': 0.4.0
+      '@stardazed/math': 0.4.0
+      '@stardazed/numeric': 0.4.0
+      '@stardazed/vector': 0.4.0
+    dev: false
+    resolution:
+      integrity: sha512-wniqhv7HuYPewWQ6eEs4KAEsjLx/OS5bosR0bTi83QFeFD5K7RvjTr+bOtvxZS4qRVIoUoaYhS+bBGNDpQWirg==
   /@stardazed/array/0.4.0:
     dev: false
     resolution:
@@ -12,6 +22,12 @@ packages:
     dev: false
     resolution:
       integrity: sha512-lyDyjRRCMh60xaVlnsye1WEcNEuLlTMt5xCn90aR2ZkG1QQC18t1QWaY30DQ11cjiEimeNBfTMQ0vHRv7BrmHQ==
+  /@stardazed/numeric/0.4.0:
+    dependencies:
+      '@stardazed/array': 0.4.0
+    dev: false
+    resolution:
+      integrity: sha512-S+FWkFWZdQqSm1YOelLEwWq5K2c/b0uCGaZcN3NCga27sbL4Yb/lstMo+CHeaF0nK5Rnhpxy8ivpBXVd72VIHA==
   /@stardazed/vector/0.4.0:
     dependencies:
       '@stardazed/array': 0.4.0
@@ -27,6 +43,7 @@ registry: 'https://registry.npmjs.org/'
 shrinkwrapMinorVersion: 9
 shrinkwrapVersion: 3
 specifiers:
+  '@stardazed/aabb': ^0.4.0
   '@stardazed/array': ^0.4.0
   '@stardazed/math': ^0.4.0
   '@stardazed/vector': ^0.4.0

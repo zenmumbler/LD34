@@ -4,6 +4,7 @@
 import { Float3, Float4x4 } from "@stardazed/array";
 import { vec2, vec3, quat, mat4 } from "@stardazed/vector";
 import { deg2rad } from "@stardazed/math";
+import { AABB } from "@stardazed/aabb";
 import * as dom from "@zenmumbler/mini-dom";
 
 import { defineTrack, TrackWidth, TrackSectionData, TrackSectionSegment, TrackSpec, TrackGenState, genTrackSectionData } from "./TrackGen";

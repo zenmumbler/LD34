@@ -4,6 +4,7 @@
 import { Float3, Float4 } from "@stardazed/array";
 import { deg2rad } from "@stardazed/math";
 import { vec2, vec3, quat } from "@stardazed/vector";
+import { AABB } from "@stardazed/aabb";
 
 export const TrackWidth = 16;
 export const TrackTorchOffset = 32;

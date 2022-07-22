@@ -1,22 +1,27 @@
 {
-  "name": "LD34",
+  "name": "snowman-builder-extreme",
   "private": true,
   "version": "1.0.0",
   "description": "Snowman Builder Extreme",
-  "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "dev": "vite --port 3500",
+    "build": "tsc && vite build",
+    "serve": "vite preview"
+  },
   "repository": {
     "type": "git",
     "url": "git@github.com:zenmumbler/LD34.git"
   },
-  "author": "Arthur Langereis",
+  "author": "zenmumbler",
   "license": "MIT",
   "homepage": "https://zenmumbler.net/LD34/",
+  "devDependencies": {
+    "tslib": "^2.3.1",
+    "typescript": "^4.3.5",
+    "vite": "^2.5.0"
+  },
   "dependencies": {
-    "@stardazed/aabb": "^0.4.0",
-    "@stardazed/array": "^0.4.0",
-    "@stardazed/math": "^0.4.0",
-    "@stardazed/vector": "^0.4.0",
-    "@zenmumbler/mini-dom": "^1.0.0"
+    "@zenmumbler/mini-dom": "^1.0.0",
+    "stardazed": "^0.5.0"
   }
 }

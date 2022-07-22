@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=1136">
+	<title>Extreme Snowman Builder (LD34) by Arthur Langereis</title>
+</head>
+<body>
+
+<p class="info">
+	This is a
+	<a href="http://ludumdare.com/compo/ludum-dare-34/?action=preview&uid=17143">Ludum Dare 34 Entry</a>
+	by
+	<a href="https://twitter.com/zenmumbler">@zenmumbler</a>
+	(<a href="credits.html">asset sources and acknowledgements</a>)
+</p>
+
+<div class="stageholder">
+	<script src="/src/LD34.ts" type="module"></script>
+
+	<canvas width="1136" height="640" id="stage"></canvas>
+
+	<div class="overlay" id="menuOverlay">
+		<div class="title"></div>
+		<div class="subtitle"></div>
+
+		<div class="explanation">
+		MOVEMENT
+		</div>
+		<div class="explanation-2">
+		Roll, grow bigger and collect as many
+		attributes as possible. Have fun!
+		</div>
+
+		<div class="start-holder">
+			<button id="start">START</button>
+		</div>
+	</div>
+
+	<div class="overlay" id="trackOverlay">
+		<div class="stat stat-left">
+			<span class="stat-title">Items</span>
+			<span class="stat-counter" id="stat-items">0</span>
+		</div>
+		<div class="stat stat-center">
+			<span class="stat-title">Speed</span>
+			<span class="stat-counter" id="stat-speed">0</span>
+		</div>
+		<div class="stat stat-right">
+			<span class="stat-title">Time</span>
+			<span class="stat-counter" id="stat-time">60</span>
+		</div>
+
+		<div class="counter count-3">3</div>
+		<div class="counter count-2">2</div>
+		<div class="counter count-1">1</div>
+		<div class="counter count-go">Go!</div>
+	</div>
+
+	<div class="overlay" id="resultOverlay">
+		<div class="stat stat-big stat-left">
+			<span class="stat-title">Pebbles</span>
+			<span class="stat-counter" id="stat-pebbles">0</span>
+		</div>
+		<div class="stat stat-big stat-center">
+			<span class="stat-title">Carrots</span>
+			<span class="stat-counter" id="stat-carrots">0</span>
+		</div>
+		<div class="stat stat-big stat-right">
+			<span class="stat-title">Hats</span>
+			<span class="stat-counter" id="stat-hats">0</span>
+		</div>
+
+		<div class="rank">“<span id="rank-name"></span>”</div>
+
+		<div class="start-holder">
+			<button id="title">TITLE</button>
+			&nbsp;&nbsp;
+			<button id="again">AGAIN</button>
+		</div>
+	</div>
+</div>
+</body>
+</html>

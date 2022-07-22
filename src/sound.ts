@@ -1,3 +1,4 @@
+import { clamp01f } from "stardazed/core";
 import { assets } from "./assets";
 
 export const enum SFXType {
@@ -19,20 +20,16 @@ export class SFX {
 	private snowGain: GainNode;
 	private fxGain: GainNode;
 
-	constructor(private ac: audio.AudioContext) {
-		if (!ac) {
-			return;
-		}
+	constructor(private ac: AudioContext) {
+		this.snowGain = ac.createGain();
+		this.snowGain.connect(ac.destination);
 
-		this.snowGain = ac.ctx.createGain();
-		this.snowGain.connect(ac.ctx.destination);
-
-		this.musicGain = ac.ctx.createGain();
-		this.musicGain.connect(ac.ctx.destination);
+		this.musicGain = ac.createGain();
+		this.musicGain.connect(ac.destination);
 		this.musicGain.gain.value = 0.8;
 
-		this.fxGain = ac.ctx.createGain();
-		this.fxGain.connect(ac.ctx.destination);
+		this.fxGain = ac.createGain();
+		this.fxGain.connect(ac.destination);
 		this.fxGain.gain.value = 0.6;
 
 		this.setPlayerInfo(false, 0);
@@ -40,7 +37,7 @@ export class SFX {
 
 	startSnow() {
 		if (!this.snowSource) {
-			this.snowSource = this.ac.ctx.createBufferSource();
+			this.snowSource = this.ac.createBufferSource();
 			this.snowSource.buffer = assets.snowLoop!;
 			this.snowSource.loop = true;
 			this.snowSource.loopEnd = assets.snowLoop!.duration;
@@ -63,7 +60,7 @@ export class SFX {
 		}
 
 		if (!this.musicSource) {
-			this.musicSource = this.ac.ctx.createBufferSource();
+			this.musicSource = this.ac.createBufferSource();
 			this.musicSource.buffer = assets.music!;
 			this.musicSource.connect(this.musicGain!);
 
@@ -83,7 +80,7 @@ export class SFX {
 			return;
 		}
 
-		var relSpeed = clamp01((speed | 0) / 12);
+		var relSpeed = clamp01f((speed | 0) / 12);
 		var maxVol = .35 * relSpeed * relSpeed;
 		this.snowGain.gain.value = floor ? maxVol : 0.05;
 	}
@@ -112,7 +109,7 @@ export class SFX {
 		if (!buffer)
 			return;
 
-		var bufferSource: AudioBufferSourceNode | null = this.ac.ctx.createBufferSource();
+		var bufferSource: AudioBufferSourceNode | null = this.ac.createBufferSource();
 		bufferSource.buffer = buffer;
 		if (what == SFXType.Pickup || what == SFXType.WallHit) {
 			bufferSource.playbackRate.value = 1.0 + ((Math.random() - 0.5) * .2);

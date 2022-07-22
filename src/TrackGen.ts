@@ -1,9 +1,8 @@
 // TrackGen - part of LD34 game
-// (c) 2015 by Arthur Langereis — @zenmumbler
+// (c) 2015 by zenmumbler
 
-import { Float3, Float4 } from "@stardazed/array";
-import { deg2rad } from "@stardazed/math";
-import { vec2, vec3, quat } from "@stardazed/vector";
+import { deg2rad } from "stardazed/core";
+import { Vector2, Vector3, Quaternion } from "stardazed/vector";
 import { AABB } from "@stardazed/aabb";
 
 export const TrackWidth = 16;

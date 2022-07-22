@@ -1,25 +1,21 @@
-/*
-
 // MenuScene - part of LD34 game
-// (c) 2015 by Arthur Langereis — @zenmumbler
+// (c) 2015 by zenmumbler
 
-class MenuScene implements SceneController {
-	private scene_: world.Scene;
-	private skybox_: world.Skybox;
-	private camTarget = new Float32Array(3);
+import * as dom from "@zenmumbler/mini-dom";
+import { RenderDeviceWebGL } from "stardazed/render";
+import { Quaternion, Vector3, Vector4 } from "stardazed/vector";
+import type { SceneController } from "./game-scene";
+import { assets } from "./assets";
+
+export class MenuScene implements SceneController {
+	private camTarget = Vector3.forward;
 	private camAngle = 0;
 
 	private mode = "wait";
 	private modeStartTime = 0;
 	private nextModeTime = 0;
 
-	constructor(private rc: render.RenderContext, private ac: audio.AudioContext) {
-		var scene = this.scene_ = new world.Scene(rc);
-
-		var sbEnt = scene.entityMgr.create();
-		this.skybox_ = new world.Skybox(this.rc, scene.transformMgr, scene.meshMgr, assets.skyTexture!);
-		this.skybox_.setEntity(sbEnt);
-
+	constructor(private rc: RenderDeviceWebGL, private ac: AudioContext) {
 		dom.on("#start", "click", (evt) => {
 			if (this.mode == "wait") {
 				this.playStartSound();
@@ -35,24 +31,24 @@ class MenuScene implements SceneController {
 
 
 	private playStartSound() {
-		if (! this.ac) {
-			return;
-		}
-
-		// play initial sound on user action to unmute audio on iOS
-		// https://paulbakaus.com/tutorials/html5/web-audio-on-ios/
-		var source = this.ac.ctx.createBufferSource();
-		source.buffer = assets.orchHitSample!;
-		const gain = this.ac.ctx.createGain();
-		gain.connect(this.ac.ctx.destination);
-		gain.gain.value = 0.75;
-		source.connect(gain);
-		source.start(0);
+		// play initial sound on user action to resume audiocontext
+		this.ac.resume().then(() => {
+			const source = this.ac.createBufferSource();
+			source.buffer = assets.orchHitSample!;
+			const gain = this.ac.createGain();
+			gain.connect(this.ac.destination);
+			gain.gain.value = 0.65;
+			source.connect(gain);
+			source.start(0);
+		});
 	}
 
 
 	renderFrame(_timeStep: number) {
-		var rpdMain = render.makeRenderPassDescriptor();
+		this.rc.state.setClearColour(Vector4.zero);
+
+		/*
+		const rpdMain = render.makeRenderPassDescriptor();
 		rpdMain.clearMask = render.ClearMask.ColourDepth;
 
 		var camera: world.ProjectionSetup = {
@@ -67,18 +63,19 @@ class MenuScene implements SceneController {
 			// -- SKYBOX
 			this.skybox_.draw(renderPass, camera);
 		});
+		*/
 	}
 
 
 	simulationStep(timeStep: number) {
-		this.camAngle += Math.PI * timeStep * .01;
-		vec3.rotateY(this.camTarget, vec3.normalize([], [0, .3, 1]), vec3.zero(), this.camAngle);
-
+		this.camAngle += 180 * timeStep * .01;
+		Quaternion.applyToVector(Quaternion.euler(0, this.camAngle, 0), this.camTarget);
+	
 		if (this.mode == "blink") {
-			var now = performance.now();
+			const now = performance.now();
 			if (now > this.nextModeTime) {
 				this.mode = "wait";
-				defaultRunLoop.sceneController = assets.trackCtl!;
+				// defaultRunLoop.sceneController = assets.trackCtl!;
 			}
 
 			var sinceClick = now - this.modeStartTime;
@@ -110,4 +107,3 @@ class MenuScene implements SceneController {
 		dom.hide("#menuOverlay");
 	}
 }
-*/
